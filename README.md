@@ -20,4 +20,9 @@ Usage:
 
 NOTE: If no options are supplied, the script will start up as an interactive interpreter with the default payload type set.
 ```
+## Examples
+
+### Interactive Mode
+```
+$ ./morseconv.sh -t TEXT
 

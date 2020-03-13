@@ -54,8 +54,7 @@ Usage(){
 }
 
 Main(){
-		if [ "$MODE" -eq 0 ]; then
-		TRANSCRIPT=$PAYLOAD
+	if [ "$MODE" -eq 0 ]; then
 		for (( i=0; i<${#PAYLOAD}; i++ )); do
 			if [[ "${PAYLOAD:$i:1}" == "." ]] || [[ "${PAYLOAD:$i:1}" == "-" ]]; then
 				BUFFER="${BUFFER}${PAYLOAD:$i:1}"	
@@ -82,7 +81,6 @@ Main(){
 		done
 		printf "\n"
 	fi
-
 	
 	if [ "$MUTE" -eq 0 ] && [ "$MODE" -eq 1 ]; then	
 		for (( i=0; i<${#TRANSCRIPT}; i++ )); do
@@ -94,6 +92,7 @@ Main(){
 				sleep 0.3 
 			fi
 		done
+		TRANSCRIPT=""
 	fi
 }
 
@@ -148,7 +147,7 @@ while getopts ":t:i:f:mh" opt ; do
 	esac
 done
 
-if [ -z "$PAYLOAD" ]; then
+if [ -z "$PAYLOAD" ] && [ "$INTERACTIVE" -eq 0 ]; then
 	echo "Payload empty! Continuing in interactive mode."
 	echo ""
 	INTERACTIVE=1
@@ -157,6 +156,7 @@ fi
 
 if [ "$INTERACTIVE" -eq 1 ]; then
 	while true ; do
+		printf "\n"
 		read -p "MorseConv> " USER_INPUT
 		if [ "$?" -eq 1 ]; then
 			printf '\n'
