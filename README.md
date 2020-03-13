@@ -13,7 +13,7 @@ The implementation supports the standard International Morse Code **[A-Za-z0-9]*
 * The **dots** are represented with either **.** or **\***.
 * The **dashes** are represented with either **-** or **_**.
 * Each letter sequence is **separated by whitespace**.
-* To declare an **actual space**, the **slash(/)** is used.
+* To declare an **actual space**, the **slash with trailing whitespace ( / )** is used.
 ## Usage
 ```
 $ ./morseconv.sh -h
