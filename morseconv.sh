@@ -3,6 +3,8 @@
 MUTE=0
 MODE=0
 TRANSCRIPT=""
+PAYLOAD=""
+INTERACTIVE=1
 declare -A text_to_morse #Build text_to_morse code dictionary
 text_to_morse['A']='.-' 	; 	text_to_morse['B']='-...' 	; 	text_to_morse['C']='-.-.' 	;
 text_to_morse['D']='-..' 	; 	text_to_morse['E']='.'    	; 	text_to_morse['F']='..-.' 	;
@@ -45,6 +47,49 @@ Usage(){
 	echo ""
 }
 
+Main(){
+		if [ "$MODE" -eq 0 ]; then
+		TRANSCRIPT=$PAYLOAD
+		for (( i=0; i<${#PAYLOAD}; i++ )); do
+			if [[ "${PAYLOAD:$i:1}" == "." ]] || [[ "${PAYLOAD:$i:1}" == "-" ]]; then
+				BUFFER="${BUFFER}${PAYLOAD:$i:1}"	
+			elif [[ "${PAYLOAD:$i:1}" =~ [[:space:]] ]] && [[ "$BUFFER" != "" ]] ; then
+				printf "%s" "${morse_to_text[$BUFFER]}"
+				BUFFER=""
+			elif [[ "${PAYLOAD:$i:1}" == "/" ]]; then
+				printf " "
+				BUFFER=""
+			fi
+		done
+		printf "\n"
+	else
+		for (( i=0; i<${#PAYLOAD}; i++ )); do
+			if echo "${PAYLOAD:$i:1}" | grep -q  "\*\|\^\|\%\|\[\|\]\|\{\|\}\|\~\|\`\|>\|<\|\#\||\|\\\\" ; then
+				true
+			elif [[ "${PAYLOAD:$i:1}" =~ [[:space:]] ]]; then
+				TRANSCRIPT="${TRANSCRIPT}/ "
+				printf "/ "
+			else
+				TRANSCRIPT="${TRANSCRIPT}${text_to_morse[${PAYLOAD:$i:1}]} "
+				printf "%s " "${text_to_morse[${PAYLOAD:$i:1}]}"
+			fi
+		done
+		printf "\n"
+	fi
+
+	
+	if [ "$MUTE" -eq 0 ] && [ "$MODE" -eq 1 ]; then	
+		for (( i=0; i<${#TRANSCRIPT}; i++ )); do
+			if [[ "${TRANSCRIPT:$i:1}" == "." ]]; then
+				paplay ./sounds/short.ogg 
+			elif [[ "${TRANSCRIPT:$i:1}" == "-" ]]; then
+				paplay ./sounds/long.ogg 
+			elif [[ "${TRANSCRIPT:$i:1}" =~ [[:blank:]] ]] || [[ "${TRANSCRIPT:$i:1}" == "/" ]]; then
+				sleep 0.3 
+			fi
+		done
+	fi
+}
 
 # Input collection and sanitization START
 
@@ -67,6 +112,7 @@ while getopts ":t:i:f:mh" opt ; do
 				exit 1
 			fi
 			PAYLOAD=$OPTARG
+			INTERACTIVE=0
 			;;
 		f)
 			if [ -f "$OPTARG" ]; then
@@ -75,6 +121,7 @@ while getopts ":t:i:f:mh" opt ; do
 				echo "The file $OPTARG doesn't exit."
 				exit 1
 			fi
+			INTERACTIVE=0
 			;;
 		m)
 			MUTE=1
@@ -96,6 +143,9 @@ while getopts ":t:i:f:mh" opt ; do
 	esac
 done
 
+if [ -z "$PAYLOAD" ]; then
+	INTERACTIVE=1
+fi
 
 
 
@@ -105,58 +155,23 @@ done
 
 
 
-while true ; do
-	read -p "MorseConv> " USER_INPUT
-	if [ "$?" -eq 1 ]; then
-		printf '\n'
-		exit 0
-	elif [[ "${USER_INPUT,,}" == *"quit"* ]]; then
-		printf '\n'
-		exit 0
-	fi	
+if [ "$INTERACTIVE" -eq 1 ]; then
+	while true ; do
+		read -p "MorseConv> " USER_INPUT
+		if [ "$?" -eq 1 ]; then
+			printf '\n'
+			exit 0
+		elif [[ "${USER_INPUT,,}" == *"quit"* ]]; then
+			printf '\n'
+			exit 0
+		fi	
 
-	USER_INPUT="${USER_INPUT} "
-	BUFFER=""
-	if [ "$MODE" -eq 0 ]; then
-		TRANSCRIPT=$USER_INPUT
-		for (( i=0; i<${#USER_INPUT}; i++ )); do
-			if [[ "${USER_INPUT:$i:1}" == "." ]] || [[ "${USER_INPUT:$i:1}" == "-" ]]; then
-				BUFFER="${BUFFER}${USER_INPUT:$i:1}"	
-			elif [[ "${USER_INPUT:$i:1}" =~ [[:space:]] ]] && [[ "$BUFFER" != "" ]] ; then
-				printf "%s" "${morse_to_text[$BUFFER]}"
-				BUFFER=""
-			elif [[ "${USER_INPUT:$i:1}" == "/" ]]; then
-				printf " "
-				BUFFER=""
-			fi
-		done
-		printf "\n"
-	else
-		for (( i=0; i<${#USER_INPUT}; i++ )); do
-			if echo "${USER_INPUT:$i:1}" | grep -q  "\*\|\^\|\%\|\[\|\]\|\{\|\}\|\~\|\`\|>\|<\|\#\||\|\\\\" ; then
-				true
-			elif [[ "${USER_INPUT:$i:1}" =~ [[:space:]] ]]; then
-				TRANSCRIPT="${TRANSCRIPT}/ "
-				printf "/ "
-			else
-				TRANSCRIPT="${TRANSCRIPT}${text_to_morse[${USER_INPUT:$i:1}]} "
-				printf "%s " "${text_to_morse[${USER_INPUT:$i:1}]}"
-			fi
-		done
-		printf "\n"
-	fi
-
-	
-	if [ "$MUTE" -eq 0 ] && [ "$MODE" -eq 1 ]; then	
-		for (( i=0; i<${#TRANSCRIPT}; i++ )); do
-			if [[ "${TRANSCRIPT:$i:1}" == "." ]]; then
-				paplay ./sounds/short.ogg 
-			elif [[ "${TRANSCRIPT:$i:1}" == "-" ]]; then
-				paplay ./sounds/long.ogg 
-			elif [[ "${TRANSCRIPT:$i:1}" =~ [[:blank:]] ]] || [[ "${TRANSCRIPT:$i:1}" == "/" ]]; then
-				sleep 0.3 
-			fi
-		done
-	fi
-done
+		PAYLOAD="${USER_INPUT} "
+		BUFFER=""
+		Main
+	done
+else
+	PAYLOAD="${PAYLOAD} "
+	Main
+fi
 
