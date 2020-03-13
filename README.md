@@ -29,6 +29,7 @@ NOTE: If no options are supplied, the script will start up as an interactive int
 ## Examples
 
 ### Interactive 
+**text2morse**
 ```
 $ ./morseconv.sh -t TEXT
 
@@ -37,7 +38,7 @@ MorseConv> this is an example.
 
 MorseConv> 
 ```
-**OR**
+**morse2text**
 ```
 $ ./morseconv.sh -t MORSE
 
@@ -46,8 +47,8 @@ THIS IS AN EXAMPLE.
 
 MorseConv> 
 ```
-\
 ### Payload As Argument
+**text2morse**
 ```
 $  ./morseconv.sh -t TEXT -i "Hello world!"
 
@@ -55,7 +56,7 @@ $  ./morseconv.sh -t TEXT -i "Hello world!"
 
 $
 ```
-**OR**
+**morse2text**
 ```
 $  ./morseconv.sh -t MORSE -i ".... . .-.. .-.. --- / .-- --- .-. .-.. -.. -.-.-- /"
 
@@ -63,5 +64,22 @@ HELLO WORLD!
 
 $
 ```
-<br/>
 ### Payload From File
+**text2morse**
+```
+$ echo "Hello World" > file
+$  ./morseconv.sh -t TEXT -f file 
+
+.... . .-.. .-.. --- / .-- --- .-. .-.. -.. / 
+
+$
+```
+**morse2text**
+```
+$ echo ".... . .-.. .-.. --- / .-- --- .-. .-.. -.. /" > file
+$ ./morseconv.sh -t MORSE -f file 
+
+HELLO WORLD 
+
+$
+```
