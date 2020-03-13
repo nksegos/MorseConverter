@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MUTE=0
-MODE=0
+MODE=1
 TRANSCRIPT=""
 PAYLOAD=""
 INTERACTIVE=1
@@ -39,7 +39,7 @@ done
 ## Usage function 
 Usage(){
 	echo "Usage:"
-	echo " 		-t PAYLOAD_TYPE: Provide the type of the input payload.Valid values are text or morse.(Default:morse)"
+	echo " 		-t PAYLOAD_TYPE: Provide the type of the input payload.Valid values are text or morse.(Default:text)"
 	echo " 		-i PAYLOAD: Provide the input payload to be converted."
 	echo " 		-f PAYLOAD_FILE: Load input payload from a file."
 	echo " 		-m: Mute the sound transcription when converting text to morse."
@@ -144,15 +144,10 @@ while getopts ":t:i:f:mh" opt ; do
 done
 
 if [ -z "$PAYLOAD" ]; then
+	echo "Payload empty! Continuing in interactive mode."
+	echo ""
 	INTERACTIVE=1
 fi
-
-
-
-
-
-
-
 
 
 if [ "$INTERACTIVE" -eq 1 ]; then
@@ -173,5 +168,6 @@ if [ "$INTERACTIVE" -eq 1 ]; then
 else
 	PAYLOAD="${PAYLOAD} "
 	Main
+	exit 0
 fi
 
