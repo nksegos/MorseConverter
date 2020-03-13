@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MUTE=1
+MUTE=0
 MODE=0
 TRANSCRIPT=""
 declare -A text_to_morse #Build text_to_morse code dictionary
@@ -32,6 +32,75 @@ declare -A morse_to_text
 for i in "${!text_to_morse[@]}"; do
   morse_to_text["${text_to_morse[$i]}"]="$i"
 done
+
+
+## Usage function 
+Usage(){
+	echo "Usage:"
+	echo " 		-t PAYLOAD_TYPE: Provide the type of the input payload.Valid values are text or morse.(Default:morse)"
+	echo " 		-i PAYLOAD: Provide the input payload to be converted."
+	echo " 		-f PAYLOAD_FILE: Load input payload from a file."
+	echo " 		-m: Mute the sound transcription when converting text to morse."
+	echo " 		-h: Display help menu."
+	echo ""
+}
+
+
+# Input collection and sanitization START
+
+while getopts ":t:i:f:mh" opt ; do
+	case $opt in
+		t)
+			if [[ "${OPTARG^^}" == "MORSE" ]]; then
+				MODE=0
+			elif [[ "${OPTARG^^}" == "TEXT" ]]; then
+				MODE=1
+			else
+				echo "Invalid mode!"
+				Usage
+				exit 1
+			fi
+			;; 
+		i)
+			if [ -z "$OPTARG" ]; then
+				echo "Empty payload!"
+				exit 1
+			fi
+			PAYLOAD=$OPTARG
+			;;
+		f)
+			if [ -f "$OPTARG" ]; then
+				PAYLOAD=$(cat $OPTARG)
+			else
+				echo "The file $OPTARG doesn't exit."
+				exit 1
+			fi
+			;;
+		m)
+			MUTE=1
+			;;
+		h)
+			Usage
+			exit 0
+			;;
+		\?)
+			echo "Invalid option: -$OPTARG"
+			Usage
+			exit 1
+			;;
+		:)
+			echo "Option -$OPTARG requires an argument."
+			Usage
+			exit 1
+			;;
+	esac
+done
+
+
+
+
+
+
 
 
 
@@ -78,7 +147,7 @@ while true ; do
 	fi
 
 	
-	if [ "$MUTE" -eq 0 ]; then	
+	if [ "$MUTE" -eq 0 ] && [ "$MODE" -eq 1 ]; then	
 		for (( i=0; i<${#TRANSCRIPT}; i++ )); do
 			if [[ "${TRANSCRIPT:$i:1}" == "." ]]; then
 				paplay ./sounds/short.ogg 
