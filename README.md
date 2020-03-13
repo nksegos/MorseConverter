@@ -26,3 +26,8 @@ NOTE: If no options are supplied, the script will start up as an interactive int
 ```
 $ ./morseconv.sh -t TEXT
 
+MorseConv> this is an example.
+- .... .. ... / .. ... / .- -. / . -..- .- -- .--. .-.. . .-.-.- / 
+
+MorseConv> 
+```
