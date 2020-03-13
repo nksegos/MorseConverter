@@ -56,8 +56,10 @@ Usage(){
 Main(){
 	if [ "$MODE" -eq 0 ]; then
 		for (( i=0; i<${#PAYLOAD}; i++ )); do
-			if [[ "${PAYLOAD:$i:1}" == "." ]] || [[ "${PAYLOAD:$i:1}" == "-" ]]; then
-				BUFFER="${BUFFER}${PAYLOAD:$i:1}"	
+			if [[ "${PAYLOAD:$i:1}" == "." ]] || [[ "${PAYLOAD:$i:1}" == "*" ]]; then
+				BUFFER="${BUFFER}."
+			elif [[ "${PAYLOAD:$i:1}" == "-" ]] || [[ "${PAYLOAD:$i:1}" == "_" ]]; then
+				BUFFER="${BUFFER}-"	
 			elif [[ "${PAYLOAD:$i:1}" =~ [[:space:]] ]] && [[ "$BUFFER" != "" ]] ; then
 				printf "%s" "${morse_to_text[$BUFFER]}"
 				BUFFER=""
