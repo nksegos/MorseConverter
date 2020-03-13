@@ -7,6 +7,7 @@ PAYLOAD=""
 INTERACTIVE=1
 USER_INPUT=""
 BUFFER=""
+SANITIZER=""
 
 declare -A text_to_morse #Build text_to_morse code dictionary
 text_to_morse['A']='.-' 	; 	text_to_morse['B']='-...' 	; 	text_to_morse['C']='-.-.' 	;
@@ -75,8 +76,10 @@ Main(){
 				TRANSCRIPT="${TRANSCRIPT}/ "
 				printf "/ "
 			else
-				TRANSCRIPT="${TRANSCRIPT}${text_to_morse[${PAYLOAD:$i:1}]} "
-				printf "%s " "${text_to_morse[${PAYLOAD:$i:1}]}"
+				SANITIZER=${PAYLOAD:$i:1}
+				SANITIZER=${SANITIZER^^}
+				TRANSCRIPT="${TRANSCRIPT}${text_to_morse[$SANITIZER]} "
+				printf "%s " "${text_to_morse[$SANITIZER]}"
 			fi
 		done
 		printf "\n"
