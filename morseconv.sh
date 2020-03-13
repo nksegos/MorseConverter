@@ -9,7 +9,7 @@ text_to_morse['D']='-..' 	; 	text_to_morse['E']='.'    	; 	text_to_morse['F']='.
 text_to_morse['G']='--.' 	; 	text_to_morse['H']='....'    	; 	text_to_morse['I']='..'   	;
 text_to_morse['J']='.---' 	; 	text_to_morse['K']='-.-'     	; 	text_to_morse['L']='.-..' 	;
 text_to_morse['M']='--'  	; 	text_to_morse['N']='-.'      	; 	text_to_morse['O']='---'  	;
-text_to_morse['P']='.--.' 	; 	text_to_morse['Q']='---.--.-' 	; 	text_to_morse['R']='--.-' 	;
+text_to_morse['P']='.--.' 	; 	text_to_morse['Q']='--.-' 	; 	text_to_morse['R']='.-.' 	;
 text_to_morse['S']='...' 	; 	text_to_morse['T']='-'       	; 	text_to_morse['U']='..-' 	;
 text_to_morse['V']='...-' 	; 	text_to_morse['W']='.--'     	; 	text_to_morse['X']='-..-' 	;
 text_to_morse['Y']='-.--' 	; 	text_to_morse['Z']='--..' 	;
@@ -36,8 +36,6 @@ done
 
 
 
-#exit 0
-
 while true ; do
 	read -p "MorseConv> " USER_INPUT
 	if [ "$?" -eq 1 ]; then
@@ -47,9 +45,7 @@ while true ; do
 		printf '\n'
 		exit 0
 	fi	
-#	for one_thing in $USER_INPUT; do
-#    	echo $one_thing
-#	done
+
 	USER_INPUT="${USER_INPUT} "
 	BUFFER=""
 	if [ "$MODE" -eq 0 ]; then
@@ -67,9 +63,19 @@ while true ; do
 		done
 		printf "\n"
 	else
-		true
+		for (( i=0; i<${#USER_INPUT}; i++ )); do
+			if echo "${USER_INPUT:$i:1}" | grep -q  "\*\|\^\|\%\|\[\|\]\|\{\|\}\|\~\|\`\|>\|<\|\#\||\|\\\\" ; then
+				true
+			elif [[ "${USER_INPUT:$i:1}" =~ [[:space:]] ]]; then
+				TRANSCRIPT="${TRANSCRIPT}/ "
+				printf "/ "
+			else
+				TRANSCRIPT="${TRANSCRIPT}${text_to_morse[${USER_INPUT:$i:1}]} "
+				printf "%s " "${text_to_morse[${USER_INPUT:$i:1}]}"
+			fi
+		done
+		printf "\n"
 	fi
-
 
 	
 	if [ "$MUTE" -eq 0 ]; then	
