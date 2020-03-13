@@ -76,10 +76,8 @@ Main(){
 				TRANSCRIPT="${TRANSCRIPT}/ "
 				printf "/ "
 			else
-				SANITIZER=${PAYLOAD:$i:1}
-				SANITIZER=${SANITIZER^^}
-				TRANSCRIPT="${TRANSCRIPT}${text_to_morse[$SANITIZER]} "
-				printf "%s " "${text_to_morse[$SANITIZER]}"
+				TRANSCRIPT="${TRANSCRIPT}${text_to_morse[${PAYLOAD:$i:1}]} "
+				printf "%s " "${text_to_morse[${PAYLOAD:$i:1}]}"
 			fi
 		done
 		printf "\n"
@@ -168,12 +166,12 @@ if [ "$INTERACTIVE" -eq 1 ]; then
 			exit 0
 		fi	
 
-		PAYLOAD="${USER_INPUT} "
+		PAYLOAD="${USER_INPUT^^} "
 		BUFFER=""
 		Main
 	done
 else
-	PAYLOAD="${PAYLOAD} "
+	PAYLOAD="${PAYLOAD^^} "
 	Main
 	exit 0
 fi
