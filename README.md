@@ -31,3 +31,14 @@ MorseConv> this is an example.
 
 MorseConv> 
 ```
+**OR**
+```
+$ ./morseconv.sh -t MORSE
+
+MorseConv> - .... .. ... / .. ... / .- -. / . -..- .- -- .--. .-.. . .-.-.- /
+THIS IS AN EXAMPLE. 
+
+MorseConv> 
+```
+
+
