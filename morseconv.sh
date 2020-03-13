@@ -173,8 +173,10 @@ if [ "$INTERACTIVE" -eq 1 ]; then
 		Main
 	done
 else
+	printf "\n"
 	PAYLOAD="${PAYLOAD^^} "
 	Main
+	printf "\n"
 	exit 0
 fi
 
