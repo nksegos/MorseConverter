@@ -5,6 +5,9 @@ MODE=1
 TRANSCRIPT=""
 PAYLOAD=""
 INTERACTIVE=1
+USER_INPUT=""
+BUFFER=""
+
 declare -A text_to_morse #Build text_to_morse code dictionary
 text_to_morse['A']='.-' 	; 	text_to_morse['B']='-...' 	; 	text_to_morse['C']='-.-.' 	;
 text_to_morse['D']='-..' 	; 	text_to_morse['E']='.'    	; 	text_to_morse['F']='..-.' 	;
@@ -44,6 +47,8 @@ Usage(){
 	echo " 		-f PAYLOAD_FILE: Load input payload from a file."
 	echo " 		-m: Mute the sound transcription when converting text to morse."
 	echo " 		-h: Display help menu."
+	echo ""
+	echo "NOTE: If no options are supplied, the script will start up as an interactive interpreter with the default payload type set."
 	echo ""
 }
 
@@ -91,7 +96,6 @@ Main(){
 	fi
 }
 
-# Input collection and sanitization START
 
 while getopts ":t:i:f:mh" opt ; do
 	case $opt in
