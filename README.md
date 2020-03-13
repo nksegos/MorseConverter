@@ -46,7 +46,7 @@ THIS IS AN EXAMPLE.
 
 MorseConv> 
 ```
-<br/>
+\
 ### Payload As Argument
 ```
 $  ./morseconv.sh -t TEXT -i "Hello world!"
