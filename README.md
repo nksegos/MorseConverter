@@ -11,6 +11,7 @@ A command line tool for converting text to morse code and vise-versa.
 The implementation supports the standard International Morse Code **[A-Za-z0-9]**, plus the following characters: **| . | , | ? | ' | ! | / | ( | ) | & | : | ; | = | + | - | _ | " | $ | @ |** 
 ### Supported Morse Input
 * The **dots** are represented with either **.** or **\***.
+* The **dashes** are
 ## Usage
 ```
 $ ./morseconv.sh -h
