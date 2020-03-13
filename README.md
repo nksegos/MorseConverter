@@ -28,7 +28,7 @@ NOTE: If no options are supplied, the script will start up as an interactive int
 ```
 ## Examples
 
-### Interactive Mode
+### Interactive 
 ```
 $ ./morseconv.sh -t TEXT
 
@@ -46,5 +46,19 @@ THIS IS AN EXAMPLE.
 
 MorseConv> 
 ```
+### Payload As Argument
+```
+$  ./morseconv.sh -t TEXT -i "Hello world!"
 
+.... . .-.. .-.. --- / .-- --- .-. .-.. -.. -.-.-- / 
 
+$
+```
+**OR**
+```
+$  ./morseconv.sh -t MORSE -i ".... . .-.. .-.. --- / .-- --- .-. .-.. -.. -.-.-- /"
+
+HELLO WORLD! 
+
+$
+```
